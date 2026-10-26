@@ -10,8 +10,8 @@
 
 | 脚本 | 一键安装 | 作用 | 匹配网站 |
 | --- | --- | --- | --- |
-| 小红书 · IM 三合一样式 | [安装](https://raw.githubusercontent.com/VenomQAQ/userscripts/main/%E5%B0%8F%E7%BA%A2%E4%B9%A6/xhs-dingding.user.js) | 把小红书换成钉钉 / 飞书 / 企业微信三栏聊天壳。笔记列表和详情、评论收成会话；可切换皮肤、深浅色、纯文本摸鱼、百家姓脱敏。 | `xiaohongshu.com` |
-| 知乎 · 钉钉样式 | [安装](https://raw.githubusercontent.com/VenomQAQ/userscripts/main/%E7%9F%A5%E4%B9%8E/zhihu-dingding.user.js) | 按钉钉三栏重绘知乎：左栏导航、中栏会话、右栏气泡。可一键隐藏图片。 | `zhihu.com`、`zhuanlan.zhihu.com` |
+| 小红书 · IM 三合一样式 | [安装](https://raw.githubusercontent.com/VenomQAQ/userscripts/main/xhs/xhs-dingding.user.js) | 把小红书换成钉钉 / 飞书 / 企业微信三栏聊天壳。笔记列表和详情、评论收成会话；可切换皮肤、深浅色、纯文本摸鱼、百家姓脱敏。 | `xiaohongshu.com` |
+| 知乎 · 钉钉样式 | [安装](https://raw.githubusercontent.com/VenomQAQ/userscripts/main/zhihu/zhihu-dingding.user.js) | 按钉钉三栏重绘知乎：左栏导航、中栏会话、右栏气泡。可一键隐藏图片。 | `zhihu.com`、`zhuanlan.zhihu.com` |
 
 ## 小红书 · IM 三合一样式
 

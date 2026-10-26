@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         知乎 · 钉钉样式
-// @namespace    https://www.zhihu.com/
+// @namespace    https://github.com/VenomQAQ/userscripts
 // @author       VenomQAQ
-// @version      1.5.1
+// @version      1.5.2
 // @description  按钉钉三栏会话重绘知乎：左栏导航、中栏会话、右栏气泡。赞同/评论/打开详情仍点击知乎原按钮。可一键隐藏图片。
 // @match        https://www.zhihu.com/*
 // @match        https://zhihu.com/*
@@ -10,8 +10,8 @@
 // @icon         https://www.zhihu.com/favicon.ico
 // @grant        none
 // @run-at       document-start
-// @updateURL    https://raw.githubusercontent.com/VenomQAQ/userscripts/main/%E7%9F%A5%E4%B9%8E/zhihu-dingding.user.js
-// @downloadURL  https://raw.githubusercontent.com/VenomQAQ/userscripts/main/%E7%9F%A5%E4%B9%8E/zhihu-dingding.user.js
+// @updateURL    https://raw.githubusercontent.com/VenomQAQ/userscripts/main/zhihu/zhihu-dingding.user.js
+// @downloadURL  https://raw.githubusercontent.com/VenomQAQ/userscripts/main/zhihu/zhihu-dingding.user.js
 // @homepageURL  https://github.com/VenomQAQ/userscripts
 // ==/UserScript==
 
