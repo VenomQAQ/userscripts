@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         知乎 · 钉钉样式
 // @namespace    https://www.zhihu.com/
-// @version      1.5.0
+// @author       VenomQAQ
+// @version      1.5.1
 // @description  按钉钉三栏会话重绘知乎：左栏导航、中栏会话、右栏气泡。赞同/评论/打开详情仍点击知乎原按钮。可一键隐藏图片。
 // @match        https://www.zhihu.com/*
 // @match        https://zhihu.com/*
