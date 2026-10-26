@@ -9,6 +9,9 @@
 // @icon         https://www.xiaohongshu.com/favicon.ico
 // @grant        unsafeWindow
 // @run-at       document-start
+// @updateURL    https://raw.githubusercontent.com/VenomQAQ/userscripts/main/%E5%B0%8F%E7%BA%A2%E4%B9%A6/xhs-dingding.user.js
+// @downloadURL  https://raw.githubusercontent.com/VenomQAQ/userscripts/main/%E5%B0%8F%E7%BA%A2%E4%B9%A6/xhs-dingding.user.js
+// @homepageURL  https://github.com/VenomQAQ/userscripts
 // ==/UserScript==
 
 (function() {

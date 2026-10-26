@@ -9,6 +9,9 @@
 // @icon         https://www.zhihu.com/favicon.ico
 // @grant        none
 // @run-at       document-start
+// @updateURL    https://raw.githubusercontent.com/VenomQAQ/userscripts/main/%E7%9F%A5%E4%B9%8E/zhihu-dingding.user.js
+// @downloadURL  https://raw.githubusercontent.com/VenomQAQ/userscripts/main/%E7%9F%A5%E4%B9%8E/zhihu-dingding.user.js
+// @homepageURL  https://github.com/VenomQAQ/userscripts
 // ==/UserScript==
 
 (function () {
