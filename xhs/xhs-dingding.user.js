@@ -2,7 +2,7 @@
 // @name         小红书 · IM 三合一样式（钉钉 / 飞书 / 企业微信）
 // @namespace    https://github.com/VenomQAQ/userscripts
 // @author       VenomQAQ
-// @version      0.1.3
+// @version      0.1.4
 // @description  一套脚本三种 IM 皮肤：钉钉 / 飞书 / 企业微信，把小红书换成三栏 IM 办公聊天壳。只换皮不碰数据：中栏笔记列表（推荐/搜索/频道）＋ 右栏笔记详情与树状评论收成聊天抽屉，点赞/收藏/关注走原生代理。支持纯文本摸鱼模式、深浅色跟随、百家姓脱敏、皮肤一键切换。
 // @match        https://www.xiaohongshu.com/*
 // @match        https://xiaohongshu.com/*
@@ -6680,16 +6680,42 @@
     function pinnedById(id) {
       return PINNED.find((c) => c.id === id) || PINNED[0];
     }
+    function isNotePath(pathname = location.pathname) {
+      return routeKind(String(pathname || "/").split("?")[0]) === "note";
+    }
+    function historyPath(url) {
+      if (url == null || url === "") return location.pathname;
+      try {
+        return new URL(String(url), location.origin).pathname;
+      } catch {
+        return String(url).split("?")[0];
+      }
+    }
     function patchHistory(onChange) {
+      const originals = {
+        pushState: history.pushState,
+        replaceState: history.replaceState
+      };
       for (const method of ["pushState", "replaceState"]) {
-        const original = history[method];
         history[method] = function(...args) {
-          const ret = original.apply(this, args);
+          const nextPath = historyPath(args[2]);
+          // 小红书打开一篇帖子会连续 push 好几条笔记地址。返回时如果逐条后退，详情会被再次打开，看起来要点三次才回首页。
+          if (method === "pushState" && isNotePath(nextPath) && (detailReturning || notePushCount > 0)) {
+            const ret = originals.replaceState.apply(this, args);
+            onChange();
+            return ret;
+          }
+          if (method === "pushState" && isNotePath(nextPath)) notePushCount++;
+          if (!isNotePath(nextPath)) notePushCount = 0;
+          const ret = originals[method].apply(this, args);
           onChange();
           return ret;
         };
       }
-      window.addEventListener("popstate", onChange);
+      window.addEventListener("popstate", () => {
+        if (!isNotePath()) notePushCount = 0;
+        onChange();
+      });
     }
     function countIn(label) {
       if (!label) return "";
@@ -8021,7 +8047,8 @@
       return `/explore/${nid}`;
     }
     function clickNativeNoteCard(nid) {
-      if (!nid) return;
+      if (!nid || detailReturning) return;
+      if (location.pathname.includes("/" + nid)) return;
       try {
         const card = findTweetArticle(nid);
         const url = findNoteCardUrl(nid);
@@ -9935,6 +9962,8 @@
     }
     let detailRenderedHref = "";
     let detailPrevUrl = "";
+    let detailReturning = "";
+    let notePushCount = 0;
     let lastThreadDetail = null;
     const expandedReplyThreads = /* @__PURE__ */ new Set();
     const replyThreadDone = /* @__PURE__ */ new Set();
@@ -10859,23 +10888,43 @@
     function setDetailOpen(open) {
       detailView == null ? void 0 : detailView.classList.toggle("is-open", open);
     }
-    function closeDetailTo() {
-      const onNoteUrl = /\/explore\/[a-f0-9]+/.test(location.pathname);
-      closeDetailDrawer();
-      if (onNoteUrl) {
-        if (detailPrevUrl) {
-          try {
-            history.replaceState(null, "", detailPrevUrl);
-          } catch {
-          }
-        }
-        if (history.length > 1) {
-          try {
-            history.back();
-          } catch {
-          }
+    function replaceDetailHome(home) {
+      const dest = home && String(home).startsWith("/") ? home : "/explore";
+      const router = findVueRouter();
+      if (router && typeof router.replace === "function") {
+        try {
+          router.replace(dest);
+          return;
+        } catch {
         }
       }
+      try {
+        history.replaceState(null, "", dest);
+        pageWindow().dispatchEvent(new PopStateEvent("popstate"));
+      } catch {
+      }
+    }
+    function closeDetailTo() {
+      const home = detailPrevUrl || "/explore";
+      const steps = Math.min(8, Math.max(notePushCount, isNotePath() ? 1 : 0));
+      detailPrevUrl = "";
+      notePushCount = 0;
+      closeDetailDrawer();
+      if (!isNotePath()) return;
+      detailReturning = home;
+      try {
+        if (steps > 0 && history.length > 1) history.go(-steps);
+        else replaceDetailHome(home);
+      } catch {
+        replaceDetailHome(home);
+        detailReturning = "";
+      }
+      window.setTimeout(() => {
+        if (!detailReturning) return;
+        if (isNotePath()) replaceDetailHome(detailReturning);
+        detailReturning = "";
+        notePushCount = 0;
+      }, 280);
     }
     function ensureDetailView() {
       var _a, _b, _c;
@@ -10970,6 +11019,11 @@
     }
     function syncDetailDrawer() {
       var _a;
+      if (detailReturning) {
+        closeDetailDrawer();
+        if (!isNotePath()) detailReturning = "";
+        return isNotePath();
+      }
       if ((detailView == null ? void 0 : detailView.classList.contains("is-open")) && detailRenderedHref) return true;
       const status = statusInfo();
       if (!status) {
