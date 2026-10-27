@@ -2,7 +2,7 @@
 // @name         小红书 · IM 三合一样式（钉钉 / 飞书 / 企业微信）
 // @namespace    https://github.com/VenomQAQ/userscripts
 // @author       VenomQAQ
-// @version      0.1.5
+// @version      0.1.6
 // @description  将小红书换成三栏 IM 办公聊天壳。只换皮不碰数据：中栏笔记列表（推荐/搜索/频道）＋ 右栏笔记详情与树状评论收成聊天抽屉，点赞/收藏/关注走原生代理。支持纯文本摸鱼模式、深浅色跟随、百家姓脱敏、皮肤一键切换。
 // @match        https://www.xiaohongshu.com/*
 // @match        https://xiaohongshu.com/*
@@ -6414,6 +6414,7 @@
   html.im-theme .im-titlebar { z-index: 9000 !important; }
   html.im-theme .xim-skin-menu { z-index: 9500 !important; }
   html.im-theme .im-lightbox { z-index: 99999 !important; }
+  html.im-theme .im-msg-bubble { cursor: pointer; }
   
   /* 纯文本摸鱼模式：隐藏所有缩略图、封面图、画廊、消息图、评论图与视频封面 */
   html.im-theme.im-hide-media .im-msg-thumb,
@@ -9780,7 +9781,7 @@
           </span>
         </div>` : "";
       const long = t.isNote || (t.text || "").length > 240;
-      const body = `<div class="im-tw-body${long ? " im-longtext" : ""}"${long ? ' title="点击展开全部"' : ""}>${t.html ? t.html : escapeHtml(t.text || "").replace(/\n/g, "<br>")}</div>`;
+      const body = `<div class="im-tw-body${long ? " im-longtext" : ""}">${t.html ? t.html : escapeHtml(t.text || "").replace(/\n/g, "<br>")}</div>`;
       const extras = extrasHtml(t);
       const handle = t.handle || "";
       const context = t.reposter ? `<div class="im-repost-tag">${ICONS.repost}<span><b>${escapeHtml(t.reposter)}</b> 转发了</span></div>` : "";
@@ -9796,7 +9797,7 @@
         t.bookmarkCount ? `书签 ${t.bookmarkCount}` : "",
         t.viewCount ? `浏览 ${t.viewCount}` : ""
       ].filter(Boolean).join(" · ");
-      const bubbleTitle = statsSummary ? ` title="${escapeHtml(statsSummary)}"` : long ? ' title="点击展开全部"' : "";
+      const bubbleTitle = statsSummary ? ` title="${escapeHtml(statsSummary)}"` : ' title="查看详情"';
       const followTag = t.canFollow && !t.mine && handle ? `<button type="button" class="im-msg-follow${t.isFollowing ? " on" : ""}" data-id="${escapeHtml(t.id)}" data-handle="${escapeHtml(handle)}" title="${t.isFollowing ? "已关注" : "关注"} @${escapeHtml(handle)}">${t.isFollowing ? "已关注" : "+ 关注"}</button>` : "";
       return `<div class="im-msg im-msg-${side}${t.isSub || t.repliedTo ? " is-sub" : ""}" data-id="${escapeHtml(t.id)}" data-href="${escapeHtml(t.href || "")}" data-handle="${escapeHtml(handle)}" data-profile="${escapeHtml(t.profileHref || "")}" data-translated="${escapeHtml(String(translated))}">
       ${ava}
@@ -10590,11 +10591,6 @@
         const group = media.closest(".im-msg-photos, .im-thread-pin-photos");
         const photos = group ? [...group.querySelectorAll("img")].map((i) => i.src || "").filter(Boolean) : [];
         openImImageModal(media.src, photos);
-        return;
-      }
-      const longtext = e.target.closest(".im-longtext");
-      if (longtext) {
-        longtext.classList.toggle("is-open");
         return;
       }
       const video = e.target.closest(".im-video");
